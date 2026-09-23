@@ -1,0 +1,564 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #171717;
+        --bg-soft: #1c1c1c;
+        --bg-light: #242424;
+        --card: #252525;
+        --white: #f5f5f2;
+        --muted: #9b9b9b;
+        --gold: #d8c08b;
+        --gold-light: #eee0b8;
+        --line: rgba(255, 255, 255, 0.14);
+        --max: 1380px;
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        background: var(--bg);
+        color: var(--white);
+        font-family: "DM Sans", sans-serif;
+        overflow-x: hidden;
+      }
+      img { width: 100%; display: block; object-fit: cover; }
+      a { color: inherit; text-decoration: none; }
+      button, input, textarea { font-family: inherit; }
+      button { cursor: pointer; }
+      .container { width: min(var(--max), calc(100% - 80px)); margin: auto; }
+      .section { padding: 120px 0; }
+      ::selection { background: var(--gold); color: #111; }
+
+      .cursor {
+        position: fixed; width: 11px; height: 11px; border-radius: 50%;
+        background: var(--gold); pointer-events: none; z-index: 99999;
+        transform: translate(-50%, -50%); mix-blend-mode: difference;
+      }
+      @media (max-width: 800px) { .cursor { display: none; } }
+
+      header { position: absolute; top: 0; left: 0; width: 100%; z-index: 1000; transition: .35s; }
+      .navbar {
+        height: 95px; display: flex; align-items: center; justify-content: space-between;
+        border-bottom: 1px solid rgba(255,255,255,.12);
+      }
+      .logo { font-family: "Playfair Display", serif; font-size: 27px; font-weight: 700; font-style: italic; letter-spacing: -1.5px; }
+      .logo-main { color: var(--white); }
+      .logo-dot { color: var(--gold); }
+      .nav-links { display: flex; align-items: center; gap: 42px; list-style: none; }
+      .nav-links a { color: #d5d5d5; font-size: 11px; position: relative; transition: .3s; }
+      .nav-links a:hover { color: white; }
+      .nav-links a::after {
+        content: ""; position: absolute; left: 0; bottom: -8px; width: 0; height: 1px;
+        background: var(--gold); transition: .3s;
+      }
+      .nav-links a:hover::after { width: 100%; }
+      .nav-links a.active::after { width: 100%; }
+      .nav-links a.active { color: white; }
+      .nav-actions { display: flex; align-items: center; gap: 20px; }
+      .nav-icon { width: 18px; height: 18px; color: #ddd; font-size: 16px; }
+      .menu-btn { display: none; border: 0; background: none; color: white; font-size: 24px; }
+
+      /* PAGE HERO (about) */
+      .page-hero {
+        min-height: 560px; position: relative; display: flex; align-items: flex-end;
+        overflow: hidden; background: #141414; padding-bottom: 90px;
+      }
+      .page-hero-image { position: absolute; inset: 0; }
+      .page-hero-image img { height: 100%; filter: grayscale(100%); transform: scale(1.04); }
+      .page-hero-image::after {
+        content: ""; position: absolute; inset: 0;
+        background:
+          linear-gradient(180deg, rgba(20,20,20,.55), rgba(20,20,20,.75) 55%, #171717 100%),
+          linear-gradient(90deg, rgba(20,20,20,.9), rgba(20,20,20,.3));
+      }
+      .page-hero-content { position: relative; z-index: 2; }
+      .page-hero-small {
+        color: var(--gold); letter-spacing: 4px; text-transform: uppercase; font-size: 10px; margin-bottom: 22px;
+      }
+      .page-hero h1 {
+        font-family: "Playfair Display", serif; font-size: clamp(50px, 7vw, 92px);
+        line-height: .95; font-weight: 500; letter-spacing: -3px; max-width: 800px;
+      }
+      .page-hero h1 em { color: var(--gold); font-style: italic; }
+      .page-hero-desc { max-width: 480px; color: #aaa; font-size: 13px; line-height: 1.9; margin-top: 28px; }
+
+      .breadcrumb { position: relative; z-index: 2; display: flex; gap: 10px; color: #888; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 30px; }
+      .breadcrumb a { color: #888; transition: .3s; }
+      .breadcrumb a:hover { color: var(--gold); }
+      .breadcrumb span { color: var(--gold); }
+
+      .section-label {
+        display: flex; align-items: center; gap: 17px; color: var(--gold);
+        font-size: 10px; text-transform: uppercase; letter-spacing: 4px; margin-bottom: 32px;
+      }
+      .section-label::after { content: ""; width: 60px; height: 1px; background: var(--gold); }
+
+      .section-heading {
+        font-family: "Playfair Display", serif; font-size: clamp(45px, 5vw, 75px);
+        line-height: 1; font-weight: 500; max-width: 850px;
+      }
+      .section-heading em { color: var(--gold); font-style: italic; }
+
+      /* STORY */
+      .story { background: #1b1b1b; }
+      .story-grid { margin-top: 70px; display: grid; grid-template-columns: 1.1fr .9fr; gap: 80px; align-items: end; }
+      .story-text { max-width: 520px; color: #999; font-size: 13px; line-height: 1.9; }
+      .story-text p + p { margin-top: 22px; }
+      .story-image { height: 480px; overflow: hidden; position: relative; }
+      .story-image img { height: 100%; transition: transform 1s; }
+      .story-image:hover img { transform: scale(1.06); }
+      .story-image-badge {
+        position: absolute; left: 25px; bottom: 25px; z-index: 2;
+        background: rgba(20,20,20,.85); backdrop-filter: blur(10px);
+        border: 1px solid var(--line); padding: 18px 24px;
+      }
+      .story-image-badge .num { font-family: "Playfair Display", serif; font-size: 34px; color: var(--gold); }
+      .story-image-badge .label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: #999; margin-top: 4px; }
+
+      /* STATS */
+      .stats { background: #202020; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+      .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); }
+      .stat { padding: 55px 35px; border-right: 1px solid var(--line); }
+      .stat:last-child { border-right: 0; }
+      .stat-number { font-family: "Playfair Display", serif; font-size: 46px; }
+      .stat-label { color: #888; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; margin-top: 5px; }
+
+      /* VALUES */
+      .values { background: #1b1b1b; }
+      .values-header { display: flex; justify-content: space-between; align-items: end; margin-bottom: 60px; gap: 40px; flex-wrap: wrap; }
+      .values-header p { color: #888; max-width: 380px; font-size: 13px; line-height: 1.8; }
+      .values-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+      .value-card { background: #1b1b1b; padding: 45px 35px; transition: background .35s; }
+      .value-card:hover { background: #222; }
+      .value-num { color: var(--gold); font-size: 10px; letter-spacing: 2px; }
+      .value-card h3 { font-family: "Playfair Display", serif; font-size: 26px; margin-top: 18px; font-weight: 500; }
+      .value-card p { color: #999; font-size: 12px; line-height: 1.8; margin-top: 14px; }
+
+      /* TIMELINE */
+      .timeline { background: #202020; }
+      .timeline-list { margin-top: 60px; }
+      .timeline-item {
+        display: grid; grid-template-columns: 140px 1fr; gap: 50px;
+        padding: 38px 0; border-bottom: 1px solid var(--line); align-items: baseline;
+      }
+      .timeline-item:first-child { border-top: 1px solid var(--line); }
+      .timeline-year { font-family: "Playfair Display", serif; font-size: 30px; color: var(--gold); }
+      .timeline-body h3 { font-family: "Playfair Display", serif; font-size: 22px; font-weight: 500; margin-bottom: 8px; }
+      .timeline-body p { color: #999; font-size: 13px; line-height: 1.8; max-width: 640px; }
+
+      /* TEAM */
+      .team { background: #1b1b1b; }
+      .team-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 60px; }
+      .team-card { position: relative; overflow: hidden; }
+      .team-photo { height: 340px; overflow: hidden; filter: grayscale(45%); transition: filter .4s; }
+      .team-card:hover .team-photo { filter: grayscale(0%); }
+      .team-photo img { height: 100%; transition: transform .8s; }
+      .team-card:hover .team-photo img { transform: scale(1.07); }
+      .team-info { padding: 20px 4px; }
+      .team-info h3 { font-family: "Playfair Display", serif; font-size: 20px; font-weight: 500; }
+      .team-info p { color: var(--gold); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 6px; }
+
+      /* VIDEO / CTA */
+      .video-section { position: relative; min-height: 560px; display: flex; align-items: center; overflow: hidden; }
+      .video-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: brightness(.36) grayscale(.2); }
+      .video-section::after {
+        content: ""; position: absolute; inset: 0;
+        background: linear-gradient(90deg, rgba(0,0,0,.92), rgba(0,0,0,.38), rgba(0,0,0,.7));
+      }
+      .video-content { position: relative; z-index: 2; max-width: 700px; }
+      .video-content h2 { font-family: "Playfair Display", serif; font-size: clamp(42px, 6vw, 74px); line-height: .95; font-weight: 500; }
+      .video-content p { max-width: 480px; color: #aaa; margin-top: 22px; line-height: 1.8; font-size: 13px; }
+      .video-content .btn { margin-top: 32px; }
+
+      .btn {
+        display: inline-flex; align-items: center; justify-content: center;
+        min-width: 150px; padding: 15px 25px; border: 1px solid var(--line);
+        font-size: 10px; text-transform: uppercase; letter-spacing: 1.7px; transition: .35s;
+      }
+      .btn-primary { background: var(--white); color: #111; }
+      .btn-primary:hover { background: var(--gold); }
+      .btn-outline { color: white; }
+      .btn-outline:hover { background: white; color: #111; }
+
+      footer { background: #151515; border-top: 1px solid var(--line); padding: 45px 0; }
+      .footer-top { display: flex; justify-content: space-between; align-items: center; }
+      .footer-logo { font-family: "Playfair Display", serif; font-style: italic; font-size: 25px; font-weight: 700; }
+      .footer-logo .logo-dot { color: var(--gold); }
+      .footer-links { display: flex; gap: 35px; font-size: 10px; color: #888; }
+      .footer-links a { transition: .3s; }
+      .footer-links a:hover { color: white; }
+      .footer-social { display: flex; gap: 10px; }
+      .social { width: 35px; height: 35px; border: 1px solid var(--line); display: flex; justify-content: center; align-items: center; font-size: 9px; transition: .3s; }
+      .social:hover { background: white; color: #111; }
+      .footer-bottom { border-top: 1px solid var(--line); margin-top: 40px; padding-top: 25px; color: #555; font-size: 9px; display: flex; justify-content: space-between; }
+
+      .reveal { opacity: 0; transform: translateY(45px); transition: opacity .9s ease, transform .9s ease; }
+      .reveal.active { opacity: 1; transform: translateY(0); }
+
+      @media (max-width: 1000px) {
+        .container { width: min(92%, var(--max)); }
+        .nav-links {
+          position: fixed; top: 0; right: -100%; width: 280px; height: 100vh;
+          background: #151515; flex-direction: column; justify-content: center;
+          align-items: flex-start; padding: 40px; transition: .4s;
+        }
+        .nav-links.open { right: 0; }
+        .nav-links a { font-size: 16px; }
+        .menu-btn { display: block; }
+        .nav-actions { gap: 10px; }
+        .story-grid { grid-template-columns: 1fr; gap: 60px; }
+        .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        .stat:nth-child(2) { border-right: 0; }
+        .stat:nth-child(3) { border-top: 1px solid var(--line); }
+        .stat:nth-child(4) { border-top: 1px solid var(--line); }
+        .values-grid { grid-template-columns: repeat(2, 1fr); }
+        .team-grid { grid-template-columns: repeat(2, 1fr); }
+        .timeline-item { grid-template-columns: 1fr; gap: 12px; }
+      }
+
+      @media (max-width: 650px) {
+        .section { padding: 80px 0; }
+        .container { width: calc(100% - 40px); }
+        .navbar { height: 80px; }
+        .nav-actions .nav-icon { display: none; }
+        .page-hero { min-height: 460px; padding-bottom: 60px; }
+        .story-image { height: 300px; }
+        .stats-grid { grid-template-columns: 1fr; }
+        .stat { border-right: 0; border-bottom: 1px solid var(--line); }
+        .stat:last-child { border-bottom: 0; }
+        .values-grid { grid-template-columns: 1fr; }
+        .team-grid { grid-template-columns: 1fr; }
+        .video-section { min-height: 480px; }
+        .footer-top { flex-direction: column; align-items: flex-start; gap: 30px; }
+        .footer-links { flex-wrap: wrap; }
+        .footer-bottom { flex-direction: column; gap: 12px; }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="cursor"></div>
+
+    <header id="header">
+      <div class="container navbar">
+        <a href="index.html" class="logo">
+          <span class="logo-main">Aurum</span>
+          <span class="logo-dot">.</span>
+        </a>
+
+        <ul class="nav-links" id="navLinks">
+          <li><a href="aurum.html">Home</a></li>
+          <li><a href="aurum_property.html">Properties</a></li>
+          <li><a href="aurum_about.html" class="active">About</a></li>
+          <li><a href="aurum_project.html">Projects</a></li>
+          <li><a href="aurum_contact.html">Contact</a></li>
+        </ul>
+
+        <div class="nav-actions">
+          <span class="nav-icon">⌕</span>
+          <span class="nav-icon">♡</span>
+          <button class="menu-btn" id="menuBtn" aria-label="Open menu">☰</button>
+        </div>
+      </div>
+    </header>
+
+    <section class="page-hero" id="home">
+      <div class="page-hero-image">
+        <img
+          src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1800&q=90"
+          alt="Aurum architecture"
+        />
+      </div>
+      <div class="container page-hero-content">
+        <div class="breadcrumb"><a href="index.html">Home</a><span>/</span><span>About</span></div>
+        <div class="page-hero-small">Our Story</div>
+        <h1>Built on craft, <em>defined</em> by trust.</h1>
+        <p class="page-hero-desc">
+          For over a decade, Aurum has been shaping premium residential and
+          commercial spaces — grounded in architecture, honesty and an
+          obsession with the details that matter.
+        </p>
+      </div>
+    </section>
+
+    <section class="section story">
+      <div class="container">
+        <div class="section-label">Who We Are</div>
+        <h2 class="section-heading reveal">
+          We don't just build <em>properties</em>. We build the places
+          people call home.
+        </h2>
+
+        <div class="story-grid">
+          <div class="story-text reveal">
+            <p>
+              Aurum was founded on a simple belief — that real estate should
+              be judged not by square footage, but by how it makes people
+              feel. Every development we undertake begins with that question.
+            </p>
+            <p>
+              Today, our portfolio spans residential towers, private villas
+              and commercial landmarks across India, each shaped by
+              considered design, honest materials and a deep respect for the
+              communities they become part of.
+            </p>
+            <p>
+              We work with award-winning architects, sustainability
+              consultants and craftsmen who share our standard for quality —
+              because a building outlives a transaction, and we design for
+              that.
+            </p>
+          </div>
+
+          <div class="story-image reveal">
+            <img
+              src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=90"
+              alt="Aurum development"
+            />
+            <div class="story-image-badge">
+              <div class="num">13</div>
+              <div class="label">Years of Craft</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="stats">
+      <div class="container stats-grid">
+        <div class="stat reveal">
+          <div class="stat-number">2,00,000+</div>
+          <div class="stat-label">Happy Homes</div>
+        </div>
+        <div class="stat reveal">
+          <div class="stat-number">6000+</div>
+          <div class="stat-label">Acres Developed</div>
+        </div>
+        <div class="stat reveal">
+          <div class="stat-number">40+</div>
+          <div class="stat-label">Landmark Projects</div>
+        </div>
+        <div class="stat reveal">
+          <div class="stat-number">13</div>
+          <div class="stat-label">Years in Business</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section values">
+      <div class="container">
+        <div class="values-header">
+          <div>
+            <div class="section-label">What Drives Us</div>
+            <h2 class="section-heading reveal">Our <em>core</em> values</h2>
+          </div>
+          <p>
+            The principles that guide every decision, from first sketch to
+            final handover.
+          </p>
+        </div>
+
+        <div class="values-grid">
+          <div class="value-card reveal">
+            <div class="value-num">01</div>
+            <h3>Integrity</h3>
+            <p>Transparent pricing, honest timelines and no fine print — every client deserves clarity.</p>
+          </div>
+          <div class="value-card reveal">
+            <div class="value-num">02</div>
+            <h3>Design</h3>
+            <p>Architecture that responds to light, land and life — never generic, always intentional.</p>
+          </div>
+          <div class="value-card reveal">
+            <div class="value-num">03</div>
+            <h3>Craft</h3>
+            <p>We obsess over the details others skip, from material sourcing to final finish.</p>
+          </div>
+          <div class="value-card reveal">
+            <div class="value-num">04</div>
+            <h3>Legacy</h3>
+            <p>We build for decades, not deadlines — spaces that hold their value and their beauty.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section timeline">
+      <div class="container">
+        <div class="section-label">Our Journey</div>
+        <h2 class="section-heading reveal">A decade of <em>milestones</em></h2>
+
+        <div class="timeline-list">
+          <div class="timeline-item reveal">
+            <div class="timeline-year">2013</div>
+            <div class="timeline-body">
+              <h3>Aurum is founded</h3>
+              <p>Started with a single residential project in Mumbai, built on a promise of uncompromising quality.</p>
+            </div>
+          </div>
+          <div class="timeline-item reveal">
+            <div class="timeline-year">2017</div>
+            <div class="timeline-body">
+              <h3>Expansion to Goa &amp; Pune</h3>
+              <p>Launched our first villa collection and luxury apartment towers, doubling our footprint.</p>
+            </div>
+          </div>
+          <div class="timeline-item reveal">
+            <div class="timeline-year">2021</div>
+            <div class="timeline-body">
+              <h3>Commercial portfolio launched</h3>
+              <p>Entered commercial real estate with The District, our flagship mixed-use development in Bengaluru.</p>
+            </div>
+          </div>
+          <div class="timeline-item reveal">
+            <div class="timeline-year">2026</div>
+            <div class="timeline-body">
+              <h3>2,00,000+ homes delivered</h3>
+              <p>Crossed a landmark number of happy residents across 40+ projects nationwide.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section team">
+      <div class="container">
+        <div class="section-label">The People</div>
+        <h2 class="section-heading reveal">Meet the <em>team</em></h2>
+
+        <div class="team-grid">
+          <div class="team-card reveal">
+            <div class="team-photo"><img src="https://i.pravatar.cc/500?img=12" alt="Team member" /></div>
+            <div class="team-info">
+              <h3>Arjun Kapoor</h3>
+              <p>Founder &amp; CEO</p>
+            </div>
+          </div>
+          <div class="team-card reveal">
+            <div class="team-photo"><img src="https://i.pravatar.cc/500?img=32" alt="Team member" /></div>
+            <div class="team-info">
+              <h3>Ananya Rao</h3>
+              <p>Head of Design</p>
+            </div>
+          </div>
+          <div class="team-card reveal">
+            <div class="team-photo"><img src="https://i.pravatar.cc/500?img=51" alt="Team member" /></div>
+            <div class="team-info">
+              <h3>Vikram Shah</h3>
+              <p>Director of Projects</p>
+            </div>
+          </div>
+          <div class="team-card reveal">
+            <div class="team-photo"><img src="https://i.pravatar.cc/500?img=47" alt="Team member" /></div>
+            <div class="team-info">
+              <h3>Riya Mehta</h3>
+              <p>Client Relations</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="video-section">
+      <video
+        class="video-bg"
+        id="propertyVideo"
+        autoplay
+        muted
+        loop
+        playsinline
+        poster="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1800&q=90"
+      >
+        <source src="https://storage.googleapis.com/coverr-main/mp4/Mt_Baker.mp4" type="video/mp4" />
+      </video>
+
+      <div class="container video-content">
+        <div class="section-label">Ready When You Are</div>
+        <h2>Let's build your next chapter.</h2>
+        <p>Whether it's your first home or your next investment, our team is ready to guide you through it.</p>
+        <a href="index.html#contact" class="btn btn-primary">Get In Touch</a>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container">
+        <div class="footer-top">
+          <div class="footer-logo">
+            <span class="logo-main">Aurum</span>
+            <span class="logo-dot">.</span>
+          </div>
+
+          <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="aurum_property.html">Properties</a>
+            <a href="about.html">About</a>
+            <a href="index.html#projects">Projects</a>
+            <a href="index.html#contact">Contact</a>
+          </div>
+
+          <div class="footer-social">
+            <a href="#" class="social">IG</a>
+            <a href="#" class="social">IN</a>
+            <a href="#" class="social">FB</a>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <span>© 2026 Aurum. All rights reserved.</span>
+          <span>Crafted for modern living.</span>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const cursor = document.querySelector(".cursor");
+      document.addEventListener("mousemove", function (e) {
+        cursor.style.left = e.clientX + "px";
+        cursor.style.top = e.clientY + "px";
+      });
+
+      const menuBtn = document.getElementById("menuBtn");
+      const navLinks = document.getElementById("navLinks");
+      menuBtn.addEventListener("click", function () {
+        navLinks.classList.toggle("open");
+      });
+      document.querySelectorAll(".nav-links a").forEach(function (link) {
+        link.addEventListener("click", function () {
+          navLinks.classList.remove("open");
+        });
+      });
+
+      const reveals = document.querySelectorAll(".reveal");
+      const observer = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) entry.target.classList.add("active");
+          });
+        },
+        { threshold: 0.12 }
+      );
+      reveals.forEach(function (element) { observer.observe(element); });
+
+      const header = document.getElementById("header");
+      window.addEventListener("scroll", function () {
+        if (window.scrollY > 80) {
+          header.style.background = "rgba(18,18,18,.94)";
+          header.style.backdropFilter = "blur(16px)";
+        } else {
+          header.style.background = "transparent";
+          header.style.backdropFilter = "none";
+        }
+      });
+
+      const playVideoBtn = document.getElementById("propertyVideo");
+    </script>
+  </body>
+</html>

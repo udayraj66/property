@@ -1,0 +1,969 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #171717;
+        --bg-soft: #1c1c1c;
+        --bg-light: #242424;
+        --card: #252525;
+
+        --white: #f5f5f2;
+        --muted: #9b9b9b;
+
+        --gold: #d8c08b;
+        --gold-light: #eee0b8;
+
+        --line: rgba(255, 255, 255, 0.14);
+
+        --max: 1380px;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--white);
+        font-family: "DM Sans", sans-serif;
+        overflow-x: hidden;
+      }
+
+      img {
+        width: 100%;
+        display: block;
+        object-fit: cover;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      button,
+      input,
+      textarea,
+      select {
+        font-family: inherit;
+      }
+
+      button {
+        cursor: pointer;
+      }
+
+      .container {
+        width: min(var(--max), calc(100% - 80px));
+        margin: auto;
+      }
+
+      .section {
+        padding: 120px 0;
+      }
+
+      ::selection {
+        background: var(--gold);
+        color: #111;
+      }
+
+      .cursor {
+        position: fixed;
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+        background: var(--gold);
+        pointer-events: none;
+        z-index: 99999;
+        transform: translate(-50%, -50%);
+        mix-blend-mode: difference;
+      }
+
+      @media (max-width: 800px) {
+        .cursor {
+          display: none;
+        }
+      }
+
+      header {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+        transition: 0.35s;
+      }
+
+      .navbar {
+        height: 95px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      }
+
+      .logo {
+        font-family: "Playfair Display", serif;
+        font-size: 27px;
+        font-weight: 700;
+        font-style: italic;
+        letter-spacing: -1.5px;
+      }
+
+      .logo-main {
+        color: var(--white);
+      }
+
+      .logo-dot {
+        color: var(--gold);
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 42px;
+        list-style: none;
+      }
+
+      .nav-links a {
+        color: #d5d5d5;
+        font-size: 11px;
+        position: relative;
+        transition: 0.3s;
+      }
+
+      .nav-links a.active {
+        color: var(--gold);
+      }
+
+      .nav-links a:hover {
+        color: white;
+      }
+
+      .nav-links a::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -8px;
+        width: 0;
+        height: 1px;
+        background: var(--gold);
+        transition: 0.3s;
+      }
+
+      .nav-links a:hover::after,
+      .nav-links a.active::after {
+        width: 100%;
+      }
+
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .nav-icon {
+        width: 18px;
+        height: 18px;
+        color: #ddd;
+        font-size: 16px;
+      }
+
+      .menu-btn {
+        display: none;
+        border: 0;
+        background: none;
+        color: white;
+        font-size: 24px;
+      }
+
+      /* PAGE HERO */
+
+      .page-hero {
+        min-height: 420px;
+        position: relative;
+        display: flex;
+        align-items: flex-end;
+        overflow: hidden;
+        background: #141414;
+        padding-bottom: 70px;
+      }
+
+      .page-hero-image {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .page-hero-image img {
+        height: 100%;
+        filter: grayscale(100%);
+        opacity: 0.45;
+      }
+
+      .page-hero-image::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          180deg,
+          rgba(20, 20, 20, 0.55) 0%,
+          rgba(20, 20, 20, 0.78) 55%,
+          #141414 100%
+        );
+      }
+
+      .page-hero-content {
+        position: relative;
+        z-index: 2;
+        padding-top: 140px;
+      }
+
+      .breadcrumb {
+        color: var(--gold);
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        font-size: 10px;
+        margin-bottom: 24px;
+      }
+
+      .breadcrumb span {
+        color: #888;
+      }
+
+      .page-hero h1 {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(50px, 6.5vw, 85px);
+        line-height: 0.9;
+        font-weight: 500;
+        letter-spacing: -3px;
+        max-width: 780px;
+      }
+
+      .page-hero p {
+        max-width: 480px;
+        color: #aaa;
+        font-size: 13px;
+        line-height: 1.9;
+        margin-top: 24px;
+      }
+
+      .section-label {
+        display: flex;
+        align-items: center;
+        gap: 17px;
+        color: var(--gold);
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        margin-bottom: 32px;
+      }
+
+      .section-label::after {
+        content: "";
+        width: 60px;
+        height: 1px;
+        background: var(--gold);
+      }
+
+      /* ENQUIRE SECTION */
+
+      .enquire-section {
+        background: #1b1b1b;
+      }
+
+      .enquire-grid {
+        display: grid;
+        grid-template-columns: 0.85fr 1.15fr;
+        gap: 90px;
+        align-items: start;
+      }
+
+      .enquire-title h2 {
+        font-family: "Playfair Display", serif;
+        font-size: 55px;
+        line-height: 1;
+        font-weight: 500;
+      }
+
+      .enquire-title h2 span {
+        color: var(--gold);
+      }
+
+      .enquire-title p {
+        color: #999;
+        line-height: 1.9;
+        max-width: 400px;
+        margin-top: 25px;
+        font-size: 13px;
+      }
+
+      .enquire-perks {
+        margin-top: 40px;
+      }
+
+      .perk {
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+        padding: 18px 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .perk:first-child {
+        padding-top: 0;
+      }
+
+      .perk span {
+        color: var(--gold);
+        font-size: 13px;
+      }
+
+      .perk div h4 {
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: 0.3px;
+      }
+
+      .perk div p {
+        color: #888;
+        font-size: 11px;
+        margin-top: 4px;
+        line-height: 1.6;
+      }
+
+      .contact-detail-block {
+        margin-top: 40px;
+      }
+
+      .contact-detail {
+        padding: 16px 0;
+        border-bottom: 1px solid var(--line);
+        display: flex;
+        justify-content: space-between;
+        font-size: 11px;
+      }
+
+      .contact-detail span:first-child {
+        color: #777;
+      }
+
+      /* FORM */
+
+      .enquire-form {
+        border: 1px solid var(--line);
+        padding: 50px;
+        background: linear-gradient(145deg, #242424, #1b1b1b);
+      }
+
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 28px;
+      }
+
+      .input-group {
+        margin-bottom: 30px;
+      }
+
+      .input-group label {
+        display: block;
+        font-size: 9px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: #777;
+        margin-bottom: 12px;
+      }
+
+      .input-group input,
+      .input-group textarea,
+      .input-group select {
+        width: 100%;
+        background: transparent;
+        border: 0;
+        border-bottom: 1px solid #555;
+        color: white;
+        padding: 12px 0;
+        outline: none;
+        font-size: 13px;
+      }
+
+      .input-group select {
+        appearance: none;
+        -webkit-appearance: none;
+      }
+
+      .input-group select option {
+        background: #1c1c1c;
+        color: white;
+      }
+
+      .input-group textarea {
+        height: 100px;
+        resize: none;
+      }
+
+      .input-group input:focus,
+      .input-group textarea:focus,
+      .input-group select:focus {
+        border-color: var(--gold);
+      }
+
+      .budget-options {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 4px;
+      }
+
+      .budget-chip {
+        border: 1px solid var(--line);
+        padding: 9px 16px;
+        font-size: 10px;
+        color: #bbb;
+        transition: 0.3s;
+      }
+
+      .budget-chip input {
+        display: none;
+      }
+
+      .budget-chip.selected {
+        background: var(--white);
+        color: #111;
+        border-color: var(--white);
+      }
+
+      .submit-btn {
+        border: 0;
+        background: white;
+        color: #111;
+        padding: 16px 34px;
+        text-transform: uppercase;
+        font-size: 9px;
+        letter-spacing: 2px;
+        transition: 0.3s;
+        width: 100%;
+      }
+
+      .submit-btn:hover {
+        background: var(--gold);
+      }
+
+      .form-note {
+        color: #666;
+        font-size: 10px;
+        margin-top: 18px;
+        line-height: 1.7;
+      }
+
+      /* STRIP */
+
+      .stats {
+        background: #202020;
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .stat {
+        padding: 50px 35px;
+        border-right: 1px solid var(--line);
+      }
+
+      .stat:last-child {
+        border-right: 0;
+      }
+
+      .stat-number {
+        font-family: "Playfair Display", serif;
+        font-size: 44px;
+      }
+
+      .stat-label {
+        color: #888;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-top: 5px;
+      }
+
+      footer {
+        background: #151515;
+        border-top: 1px solid var(--line);
+        padding: 45px 0;
+      }
+
+      .footer-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .footer-logo {
+        font-family: "Playfair Display", serif;
+        font-style: italic;
+        font-size: 25px;
+        font-weight: 700;
+      }
+
+      .footer-logo .logo-dot {
+        color: var(--gold);
+      }
+
+      .footer-links {
+        display: flex;
+        gap: 35px;
+        font-size: 10px;
+        color: #888;
+      }
+
+      .footer-links a {
+        transition: 0.3s;
+      }
+
+      .footer-links a:hover {
+        color: white;
+      }
+
+      .footer-social {
+        display: flex;
+        gap: 10px;
+      }
+
+      .social {
+        width: 35px;
+        height: 35px;
+        border: 1px solid var(--line);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 9px;
+        transition: 0.3s;
+      }
+
+      .social:hover {
+        background: white;
+        color: #111;
+      }
+
+      .footer-bottom {
+        border-top: 1px solid var(--line);
+        margin-top: 40px;
+        padding-top: 25px;
+        color: #555;
+        font-size: 9px;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(45px);
+        transition:
+          opacity 0.9s ease,
+          transform 0.9s ease;
+      }
+
+      .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      @media (max-width: 1000px) {
+        .container {
+          width: min(92%, var(--max));
+        }
+
+        .nav-links {
+          position: fixed;
+          top: 0;
+          right: -100%;
+          width: 280px;
+          height: 100vh;
+          background: #151515;
+          flex-direction: column;
+          justify-content: center;
+          align-items: flex-start;
+          padding: 40px;
+          transition: 0.4s;
+        }
+
+        .nav-links.open {
+          right: 0;
+        }
+
+        .nav-links a {
+          font-size: 16px;
+        }
+
+        .menu-btn {
+          display: block;
+        }
+
+        .enquire-grid {
+          grid-template-columns: 1fr;
+          gap: 60px;
+        }
+      }
+
+      @media (max-width: 650px) {
+        .section {
+          padding: 80px 0;
+        }
+
+        .container {
+          width: calc(100% - 40px);
+        }
+
+        .navbar {
+          height: 80px;
+        }
+
+        .nav-actions .nav-icon {
+          display: none;
+        }
+
+        .page-hero-content {
+          padding-top: 110px;
+        }
+
+        .form-row {
+          grid-template-columns: 1fr;
+          gap: 0;
+        }
+
+        .enquire-form {
+          padding: 30px;
+        }
+
+        .stats-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .stat {
+          border-right: 0;
+          border-bottom: 1px solid var(--line);
+        }
+
+        .stat:last-child {
+          border-bottom: 0;
+        }
+
+        .footer-top {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 30px;
+        }
+
+        .footer-links {
+          flex-wrap: wrap;
+        }
+
+        .footer-bottom {
+          flex-direction: column;
+          gap: 12px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="cursor"></div>
+
+    <header id="header">
+      <div class="container navbar">
+        <a href="index.html" class="logo">
+          <span class="logo-main">Aurum</span>
+          <span class="logo-dot">.</span>
+        </a>
+
+        <ul class="nav-links" id="navLinks">
+          <li><a href="aurum.html">Home</a></li>
+          <li><a href="aurum_property.html">Properties</a></li>
+          <li><a href="aurum_about.html">About</a></li>
+          <li><a href="aurum_projects.html">Projects</a></li>
+          <li><a href="aurum_contact.html">Contact</a></li>
+          <li><a href="aurum_enquire.html" class="active">Enquire</a></li>
+        </ul>
+
+        <div class="nav-actions">
+          <span class="nav-icon">⌕</span>
+          <span class="nav-icon">♡</span>
+          <button class="menu-btn" id="menuBtn" aria-label="Open menu">☰</button>
+        </div>
+      </div>
+    </header>
+
+    <section class="page-hero">
+      <div class="page-hero-image">
+        <img
+          src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1800&q=90"
+          alt="Aurum property"
+        />
+      </div>
+
+      <div class="container page-hero-content">
+        <div class="breadcrumb"><a href="index.html">Home</a> <span>/</span> Enquire</div>
+        <h1>Make an Enquiry</h1>
+        <p>
+          Interested in a property or development? Share a few details and
+          one of our specialists will reach out within one business day.
+        </p>
+      </div>
+    </section>
+
+    <section class="section enquire-section" id="enquire">
+      <div class="container enquire-grid">
+        <div class="enquire-title reveal">
+          <div class="section-label">Get Started</div>
+          <h2>Let's find your <span>next space.</span></h2>
+          <p>
+            Whether you're searching for a home, a villa, or a commercial
+            opportunity, tell us what matters most and we'll match you with
+            the right listings.
+          </p>
+
+          <div class="enquire-perks">
+            <div class="perk">
+              <span>✦</span>
+              <div>
+                <h4>Personal Property Specialist</h4>
+                <p>A dedicated advisor guides you from enquiry to move-in.</p>
+              </div>
+            </div>
+            <div class="perk">
+              <span>✦</span>
+              <div>
+                <h4>Curated Shortlists</h4>
+                <p>Only listings matched to your budget and preferences.</p>
+              </div>
+            </div>
+            <div class="perk">
+              <span>✦</span>
+              <div>
+                <h4>No Obligation</h4>
+                <p>Enquire freely — there's no commitment until you're ready.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="contact-detail-block">
+            <div class="contact-detail">
+              <span>Email</span>
+              <span>hello@aurum.com</span>
+            </div>
+            <div class="contact-detail">
+              <span>Phone</span>
+              <span>+91 98765 43210</span>
+            </div>
+            <div class="contact-detail">
+              <span>Office</span>
+              <span>Mumbai · India</span>
+            </div>
+          </div>
+        </div>
+
+        <form class="enquire-form reveal" id="enquireForm">
+          <div class="form-row">
+            <div class="input-group">
+              <label>Full Name</label>
+              <input type="text" placeholder="Enter your name" required />
+            </div>
+
+            <div class="input-group">
+              <label>Phone Number</label>
+              <input type="tel" placeholder="+91" required />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="input-group">
+              <label>Email Address</label>
+              <input type="email" placeholder="Enter your email" required />
+            </div>
+
+            <div class="input-group">
+              <label>Property of Interest</label>
+              <select required>
+                <option value="" disabled selected>Select a property</option>
+                <option>Aurelia Heights — Mumbai</option>
+                <option>Casa Verde — Goa</option>
+                <option>The District — Bengaluru</option>
+                <option>Skyline — Pune</option>
+                <option>Ivory Residence — Goa</option>
+                <option>Glass Point — Hyderabad</option>
+                <option>Not sure yet</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label>Budget Range</label>
+            <div class="budget-options" id="budgetOptions">
+              <label class="budget-chip"><input type="radio" name="budget" value="under-50l" />Under ₹50L</label>
+              <label class="budget-chip"><input type="radio" name="budget" value="50l-1cr" />₹50L – ₹1Cr</label>
+              <label class="budget-chip"><input type="radio" name="budget" value="1cr-3cr" />₹1Cr – ₹3Cr</label>
+              <label class="budget-chip"><input type="radio" name="budget" value="3cr-plus" />₹3Cr+</label>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label>Message</label>
+            <textarea placeholder="Tell us more about what you're looking for..."></textarea>
+          </div>
+
+          <button class="submit-btn" type="submit">Submit Enquiry</button>
+
+          <p class="form-note">
+            By submitting, you agree to be contacted by an Aurum property
+            specialist regarding your enquiry.
+          </p>
+        </form>
+      </div>
+    </section>
+
+    <section class="stats">
+      <div class="container stats-grid">
+        <div class="stat reveal">
+          <div class="stat-number">&lt; 24h</div>
+          <div class="stat-label">Average Response Time</div>
+        </div>
+        <div class="stat reveal">
+          <div class="stat-number">40+</div>
+          <div class="stat-label">Active Listings</div>
+        </div>
+        <div class="stat reveal">
+          <div class="stat-number">12</div>
+          <div class="stat-label">Cities Covered</div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container">
+        <div class="footer-top">
+          <div class="footer-logo">
+            <span class="logo-main">Aurum</span>
+            <span class="logo-dot">.</span>
+          </div>
+
+          <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="aurum_property.html">Properties</a>
+            <a href="aurum_about.html">About</a>
+            <a href="aurum_projects.html">Projects</a>
+            <a href="aurum_contact.html">Contact</a>
+          </div>
+
+          <div class="footer-social">
+            <a href="#" class="social">IG</a>
+            <a href="#" class="social">IN</a>
+            <a href="#" class="social">FB</a>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <span>© 2026 Aurum. All rights reserved.</span>
+          <span>Crafted for modern living.</span>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const cursor = document.querySelector(".cursor");
+      document.addEventListener("mousemove", function (e) {
+        cursor.style.left = e.clientX + "px";
+        cursor.style.top = e.clientY + "px";
+      });
+
+      const menuBtn = document.getElementById("menuBtn");
+      const navLinks = document.getElementById("navLinks");
+      menuBtn.addEventListener("click", function () {
+        navLinks.classList.toggle("open");
+      });
+
+      document.querySelectorAll(".nav-links a").forEach(function (link) {
+        link.addEventListener("click", function () {
+          navLinks.classList.remove("open");
+        });
+      });
+
+      const reveals = document.querySelectorAll(".reveal");
+      const observer = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("active");
+            }
+          });
+        },
+        { threshold: 0.12 }
+      );
+      reveals.forEach(function (element) {
+        observer.observe(element);
+      });
+
+      const header = document.getElementById("header");
+      window.addEventListener("scroll", function () {
+        if (window.scrollY > 80) {
+          header.style.background = "rgba(18,18,18,.94)";
+          header.style.backdropFilter = "blur(16px)";
+        } else {
+          header.style.background = "transparent";
+          header.style.backdropFilter = "none";
+        }
+      });
+
+      // Budget chip selection
+      document.querySelectorAll(".budget-chip").forEach(function (chip) {
+        chip.addEventListener("click", function () {
+          document.querySelectorAll(".budget-chip").forEach(function (c) {
+            c.classList.remove("selected");
+          });
+          this.classList.add("selected");
+        });
+      });
+
+      // Form submit
+      const enquireForm = document.getElementById("enquireForm");
+      enquireForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const button = this.querySelector("button");
+        button.innerText = "Enquiry Sent ✓";
+        button.style.background = "#d8c08b";
+
+        setTimeout(function () {
+          button.innerText = "Submit Enquiry";
+          button.style.background = "";
+          enquireForm.reset();
+          document.querySelectorAll(".budget-chip").forEach(function (c) {
+            c.classList.remove("selected");
+          });
+        }, 3000);
+      });
+
+      document.querySelectorAll("img").forEach(function (image) {
+        image.addEventListener("load", function () {
+          this.style.opacity = "1";
+        });
+      });
+    </script>
+  </body>
+</html>

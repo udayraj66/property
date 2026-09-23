@@ -1,0 +1,1031 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #171717;
+        --bg-soft: #1c1c1c;
+        --bg-light: #242424;
+        --card: #252525;
+
+        --white: #f5f5f2;
+        --muted: #9b9b9b;
+
+        --gold: #d8c08b;
+        --gold-light: #eee0b8;
+
+        --line: rgba(255, 255, 255, 0.14);
+
+        --max: 1380px;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--white);
+        font-family: "DM Sans", sans-serif;
+        overflow-x: hidden;
+      }
+
+      img {
+        width: 100%;
+        display: block;
+        object-fit: cover;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      button,
+      input,
+      textarea {
+        font-family: inherit;
+      }
+
+      button {
+        cursor: pointer;
+      }
+
+      .container {
+        width: min(var(--max), calc(100% - 80px));
+        margin: auto;
+      }
+
+      .section {
+        padding: 120px 0;
+      }
+
+      ::selection {
+        background: var(--gold);
+        color: #111;
+      }
+
+      .cursor {
+        position: fixed;
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+        background: var(--gold);
+        pointer-events: none;
+        z-index: 99999;
+        transform: translate(-50%, -50%);
+        mix-blend-mode: difference;
+      }
+
+      @media (max-width: 800px) {
+        .cursor {
+          display: none;
+        }
+      }
+
+      header {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+        transition: 0.35s;
+      }
+
+      .navbar {
+        height: 95px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      }
+
+      .logo {
+        font-family: "Playfair Display", serif;
+        font-size: 27px;
+        font-weight: 700;
+        font-style: italic;
+        letter-spacing: -1.5px;
+      }
+
+      .logo-main {
+        color: var(--white);
+      }
+
+      .logo-dot {
+        color: var(--gold);
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 42px;
+        list-style: none;
+      }
+
+      .nav-links a {
+        color: #d5d5d5;
+        font-size: 11px;
+        position: relative;
+        transition: 0.3s;
+      }
+
+      .nav-links a.active {
+        color: var(--gold);
+      }
+
+      .nav-links a:hover {
+        color: white;
+      }
+
+      .nav-links a::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -8px;
+        width: 0;
+        height: 1px;
+        background: var(--gold);
+        transition: 0.3s;
+      }
+
+      .nav-links a:hover::after,
+      .nav-links a.active::after {
+        width: 100%;
+      }
+
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .nav-icon {
+        width: 18px;
+        height: 18px;
+        color: #ddd;
+        font-size: 16px;
+      }
+
+      .menu-btn {
+        display: none;
+        border: 0;
+        background: none;
+        color: white;
+        font-size: 24px;
+      }
+
+      /* PAGE HERO */
+
+      .page-hero {
+        min-height: 480px;
+        position: relative;
+        display: flex;
+        align-items: flex-end;
+        overflow: hidden;
+        background: #141414;
+        padding-bottom: 70px;
+      }
+
+      .page-hero-image {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .page-hero-image img {
+        height: 100%;
+        filter: grayscale(100%);
+        opacity: 0.5;
+      }
+
+      .page-hero-image::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            180deg,
+            rgba(20, 20, 20, 0.55) 0%,
+            rgba(20, 20, 20, 0.75) 55%,
+            #141414 100%
+          );
+      }
+
+      .page-hero-content {
+        position: relative;
+        z-index: 2;
+        padding-top: 140px;
+      }
+
+      .breadcrumb {
+        color: var(--gold);
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        font-size: 10px;
+        margin-bottom: 24px;
+      }
+
+      .breadcrumb span {
+        color: #888;
+      }
+
+      .page-hero h1 {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(55px, 7vw, 95px);
+        line-height: 0.9;
+        font-weight: 500;
+        letter-spacing: -3px;
+        max-width: 780px;
+      }
+
+      .page-hero p {
+        max-width: 480px;
+        color: #aaa;
+        font-size: 13px;
+        line-height: 1.9;
+        margin-top: 24px;
+      }
+
+      .section-label {
+        display: flex;
+        align-items: center;
+        gap: 17px;
+        color: var(--gold);
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        margin-bottom: 32px;
+      }
+
+      .section-label::after {
+        content: "";
+        width: 60px;
+        height: 1px;
+        background: var(--gold);
+      }
+
+      .section-heading {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(40px, 4.5vw, 60px);
+        line-height: 1;
+        font-weight: 500;
+        max-width: 850px;
+      }
+
+      .section-heading em {
+        color: var(--gold);
+        font-style: italic;
+      }
+
+      /* FILTERS */
+
+      .projects-listing {
+        background: #1b1b1b;
+      }
+
+      .listing-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 40px;
+        margin-bottom: 60px;
+        flex-wrap: wrap;
+      }
+
+      .filter-bar {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .filter-btn {
+        border: 1px solid var(--line);
+        background: transparent;
+        color: #bbb;
+        padding: 11px 22px;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        transition: 0.3s;
+      }
+
+      .filter-btn:hover {
+        border-color: var(--gold);
+        color: var(--gold);
+      }
+
+      .filter-btn.active {
+        background: var(--white);
+        color: #111;
+        border-color: var(--white);
+      }
+
+      /* PROJECT GRID */
+
+      .project-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+      }
+
+      .project-card {
+        position: relative;
+        height: 460px;
+        overflow: hidden;
+      }
+
+      .project-card img {
+        height: 100%;
+        transition: transform 0.8s;
+      }
+
+      .project-card:hover img {
+        transform: scale(1.08);
+      }
+
+      .project-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(transparent 35%, rgba(0, 0, 0, 0.92));
+      }
+
+      .project-tag {
+        position: absolute;
+        top: 22px;
+        left: 22px;
+        z-index: 2;
+        padding: 7px 14px;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        background: rgba(0, 0, 0, 0.35);
+        backdrop-filter: blur(6px);
+        font-size: 9px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+      }
+
+      .project-info {
+        position: absolute;
+        z-index: 2;
+        left: 30px;
+        right: 30px;
+        bottom: 30px;
+      }
+
+      .project-number {
+        color: var(--gold);
+        font-size: 9px;
+        letter-spacing: 2px;
+      }
+
+      .project-info h3 {
+        font-family: "Playfair Display", serif;
+        font-size: 27px;
+        margin-top: 8px;
+      }
+
+      .project-info p {
+        color: #aaa;
+        font-size: 10px;
+        margin-top: 4px;
+      }
+
+      .project-link {
+        margin-top: 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 9px;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: var(--gold-light);
+        opacity: 0;
+        transform: translateY(6px);
+        transition: 0.35s;
+      }
+
+      .project-card:hover .project-link {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* LOAD MORE */
+
+      .load-more-wrap {
+        display: flex;
+        justify-content: center;
+        margin-top: 55px;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 150px;
+        padding: 15px 25px;
+        border: 1px solid var(--line);
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1.7px;
+        transition: 0.35s;
+        background: transparent;
+        color: white;
+      }
+
+      .btn-primary {
+        background: var(--white);
+        color: #111;
+        border-color: var(--white);
+      }
+
+      .btn-primary:hover {
+        background: var(--gold);
+        border-color: var(--gold);
+      }
+
+      .btn-outline:hover {
+        background: white;
+        color: #111;
+      }
+
+      /* STATS STRIP */
+
+      .stats {
+        background: #202020;
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .stat {
+        padding: 55px 35px;
+        border-right: 1px solid var(--line);
+      }
+
+      .stat:last-child {
+        border-right: 0;
+      }
+
+      .stat-number {
+        font-family: "Playfair Display", serif;
+        font-size: 50px;
+      }
+
+      .stat-label {
+        color: #888;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-top: 5px;
+      }
+
+      /* CTA */
+
+      .cta {
+        background: #202020;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .cta-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 40px;
+        flex-wrap: wrap;
+      }
+
+      .cta h2 {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(38px, 4.5vw, 58px);
+        line-height: 1.05;
+        font-weight: 500;
+        max-width: 560px;
+      }
+
+      .cta h2 span {
+        color: var(--gold);
+      }
+
+      .cta p {
+        color: #999;
+        font-size: 13px;
+        margin-top: 18px;
+        max-width: 420px;
+        line-height: 1.8;
+      }
+
+      footer {
+        background: #151515;
+        border-top: 1px solid var(--line);
+        padding: 45px 0;
+      }
+
+      .footer-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .footer-logo {
+        font-family: "Playfair Display", serif;
+        font-style: italic;
+        font-size: 25px;
+        font-weight: 700;
+      }
+
+      .footer-logo .logo-dot {
+        color: var(--gold);
+      }
+
+      .footer-links {
+        display: flex;
+        gap: 35px;
+        font-size: 10px;
+        color: #888;
+      }
+
+      .footer-links a {
+        transition: 0.3s;
+      }
+
+      .footer-links a:hover {
+        color: white;
+      }
+
+      .footer-social {
+        display: flex;
+        gap: 10px;
+      }
+
+      .social {
+        width: 35px;
+        height: 35px;
+        border: 1px solid var(--line);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 9px;
+        transition: 0.3s;
+      }
+
+      .social:hover {
+        background: white;
+        color: #111;
+      }
+
+      .footer-bottom {
+        border-top: 1px solid var(--line);
+        margin-top: 40px;
+        padding-top: 25px;
+        color: #555;
+        font-size: 9px;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(45px);
+        transition:
+          opacity 0.9s ease,
+          transform 0.9s ease;
+      }
+
+      .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .hidden-card {
+        display: none !important;
+      }
+
+      @media (max-width: 1000px) {
+        .container {
+          width: min(92%, var(--max));
+        }
+
+        .nav-links {
+          position: fixed;
+          top: 0;
+          right: -100%;
+          width: 280px;
+          height: 100vh;
+          background: #151515;
+          flex-direction: column;
+          justify-content: center;
+          align-items: flex-start;
+          padding: 40px;
+          transition: 0.4s;
+        }
+
+        .nav-links.open {
+          right: 0;
+        }
+
+        .nav-links a {
+          font-size: 16px;
+        }
+
+        .menu-btn {
+          display: block;
+        }
+
+        .project-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+
+        .page-hero {
+          min-height: 420px;
+        }
+      }
+
+      @media (max-width: 650px) {
+        .section {
+          padding: 80px 0;
+        }
+
+        .container {
+          width: calc(100% - 40px);
+        }
+
+        .navbar {
+          height: 80px;
+        }
+
+        .nav-actions .nav-icon {
+          display: none;
+        }
+
+        .page-hero-content {
+          padding-top: 110px;
+        }
+
+        .project-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .project-card {
+          height: 400px;
+        }
+
+        .stats-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .stat {
+          border-right: 0;
+          border-bottom: 1px solid var(--line);
+        }
+
+        .stat:last-child {
+          border-bottom: 0;
+        }
+
+        .cta-inner {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .footer-top {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 30px;
+        }
+
+        .footer-links {
+          flex-wrap: wrap;
+        }
+
+        .footer-bottom {
+          flex-direction: column;
+          gap: 12px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="cursor"></div>
+
+    <header id="header">
+      <div class="container navbar">
+        <a href="index.html" class="logo">
+          <span class="logo-main">Aurum</span>
+          <span class="logo-dot">.</span>
+        </a>
+
+        <ul class="nav-links" id="navLinks">
+          <li><a href="aurum.html">Home</a></li>
+          <li><a href="aurum_property.html">Properties</a></li>
+          <li><a href="aurum_about.html">About</a></li>
+          <li><a href="aurum_projects.html" class="active">Projects</a></li>
+          <li><a href="aurum_contact.html">Contact</a></li>
+        </ul>
+
+        <div class="nav-actions">
+          <span class="nav-icon">⌕</span>
+          <span class="nav-icon">♡</span>
+          <button class="menu-btn" id="menuBtn" aria-label="Open menu">☰</button>
+        </div>
+      </div>
+    </header>
+
+    <section class="page-hero">
+      <div class="page-hero-image">
+        <img
+          src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1800&q=90"
+          alt="Aurum development"
+        />
+      </div>
+
+      <div class="container page-hero-content">
+        <div class="breadcrumb"><a href="index.html">Home</a> <span>/</span> Projects</div>
+        <h1>Our Portfolio</h1>
+        <p>
+          A growing collection of residential, villa and commercial
+          developments — each shaped by thoughtful architecture and lasting
+          value.
+        </p>
+      </div>
+    </section>
+
+    <section class="section projects-listing" id="projects">
+      <div class="container">
+        <div class="listing-header">
+          <div>
+            <div class="section-label">Selected Work</div>
+            <h2 class="section-heading reveal">
+              Every project, <em>built</em> to belong.
+            </h2>
+          </div>
+
+          <div class="filter-bar" id="filterBar">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="residential">Residential</button>
+            <button class="filter-btn" data-filter="villas">Villas</button>
+            <button class="filter-btn" data-filter="commercial">Commercial</button>
+          </div>
+        </div>
+
+        <div class="project-grid" id="projectGrid">
+          <!-- 01 -->
+          <div class="project-card reveal" data-category="residential">
+            <div class="project-tag">Residential</div>
+            <img
+              src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1000&q=90"
+              alt="Aurelia Heights"
+            />
+            <div class="project-info">
+              <div class="project-number">01 / RESIDENTIAL</div>
+              <h3>Aurelia Heights</h3>
+              <p>Mumbai · 2026</p>
+              <div class="project-link">View Project →</div>
+            </div>
+          </div>
+
+          <!-- 02 -->
+          <div class="project-card reveal" data-category="villas">
+            <div class="project-tag">Villas</div>
+            <img
+              src="https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1000&q=90"
+              alt="Casa Verde"
+            />
+            <div class="project-info">
+              <div class="project-number">02 / VILLAS</div>
+              <h3>Casa Verde</h3>
+              <p>Goa · 2026</p>
+              <div class="project-link">View Project →</div>
+            </div>
+          </div>
+
+          <!-- 03 -->
+          <div class="project-card reveal" data-category="commercial">
+            <div class="project-tag">Commercial</div>
+            <img
+              src="https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=1000&q=90"
+              alt="The District"
+            />
+            <div class="project-info">
+              <div class="project-number">03 / COMMERCIAL</div>
+              <h3>The District</h3>
+              <p>Bengaluru · 2026</p>
+              <div class="project-link">View Project →</div>
+            </div>
+          </div>
+
+          <!-- 04 -->
+          <div class="project-card reveal" data-category="residential">
+            <div class="project-tag">Residential</div>
+            <img
+              src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1000&q=90"
+              alt="Skyline"
+            />
+            <div class="project-info">
+              <div class="project-number">04 / RESIDENTIAL</div>
+              <h3>Skyline</h3>
+              <p>Pune · 2025</p>
+              <div class="project-link">View Project →</div>
+            </div>
+          </div>
+
+          <!-- 05 -->
+          <div class="project-card reveal" data-category="villas">
+            <div class="project-tag">Villas</div>
+            <img
+              src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=90"
+              alt="Ivory Residence"
+            />
+            <div class="project-info">
+              <div class="project-number">05 / VILLAS</div>
+              <h3>Ivory Residence</h3>
+              <p>Goa · 2025</p>
+              <div class="project-link">View Project →</div>
+            </div>
+          </div>
+
+          <!-- 06 -->
+          <div class="project-card reveal" data-category="commercial">
+            <div class="project-tag">Commercial</div>
+            <img
+              src="https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1000&q=90"
+              alt="Glass Point"
+            />
+            <div class="project-info">
+              <div class="project-number">06 / COMMERCIAL</div>
+              <h3>Glass Point</h3>
+              <p>Hyderabad · 2025</p>
+              <div class="project-link">View Project →</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="load-more-wrap">
+          <button class="btn btn-outline" id="loadMoreBtn">Load More Projects</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="stats">
+      <div class="container stats-grid">
+        <div class="stat reveal">
+          <div class="stat-number">40+</div>
+          <div class="stat-label">Completed Projects</div>
+        </div>
+        <div class="stat reveal">
+          <div class="stat-number">6000+</div>
+          <div class="stat-label">Acres Developed</div>
+        </div>
+        <div class="stat reveal">
+          <div class="stat-number">12</div>
+          <div class="stat-label">Cities Present</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta">
+      <div class="container cta-inner">
+        <div class="reveal">
+          <h2>Have a project in <span>mind?</span></h2>
+          <p>
+            Tell us what you're looking to build or invest in, and our team
+            will get back to you with the right opportunities.
+          </p>
+        </div>
+
+        <a href="aurum_contact.html" class="btn btn-primary reveal">Get In Touch</a>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container">
+        <div class="footer-top">
+          <div class="footer-logo">
+            <span class="logo-main">Aurum</span>
+            <span class="logo-dot">.</span>
+          </div>
+
+          <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="aurum_property.html">Properties</a>
+            <a href="aurum_about.html">About</a>
+            <a href="aurum_projects.html">Projects</a>
+            <a href="aurum_contact.html">Contact</a>
+          </div>
+
+          <div class="footer-social">
+            <a href="#" class="social">IG</a>
+            <a href="#" class="social">IN</a>
+            <a href="#" class="social">FB</a>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <span>© 2026 Aurum. All rights reserved.</span>
+          <span>Crafted for modern living.</span>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const cursor = document.querySelector(".cursor");
+      document.addEventListener("mousemove", function (e) {
+        cursor.style.left = e.clientX + "px";
+        cursor.style.top = e.clientY + "px";
+      });
+
+      const menuBtn = document.getElementById("menuBtn");
+      const navLinks = document.getElementById("navLinks");
+      menuBtn.addEventListener("click", function () {
+        navLinks.classList.toggle("open");
+      });
+
+      document.querySelectorAll(".nav-links a").forEach(function (link) {
+        link.addEventListener("click", function () {
+          navLinks.classList.remove("open");
+        });
+      });
+
+      const reveals = document.querySelectorAll(".reveal");
+      const observer = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("active");
+            }
+          });
+        },
+        { threshold: 0.12 }
+      );
+      reveals.forEach(function (element) {
+        observer.observe(element);
+      });
+
+      const header = document.getElementById("header");
+      window.addEventListener("scroll", function () {
+        if (window.scrollY > 80) {
+          header.style.background = "rgba(18,18,18,.94)";
+          header.style.backdropFilter = "blur(16px)";
+        } else {
+          header.style.background = "transparent";
+          header.style.backdropFilter = "none";
+        }
+      });
+
+      // FILTERING
+      const filterButtons = document.querySelectorAll(".filter-btn");
+      const projectCards = document.querySelectorAll(".project-card");
+
+      filterButtons.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          filterButtons.forEach(function (b) {
+            b.classList.remove("active");
+          });
+          this.classList.add("active");
+
+          const filter = this.dataset.filter;
+
+          projectCards.forEach(function (card) {
+            if (filter === "all" || card.dataset.category === filter) {
+              card.classList.remove("hidden-card");
+            } else {
+              card.classList.add("hidden-card");
+            }
+          });
+        });
+      });
+
+      // LOAD MORE (demo toggle)
+      const loadMoreBtn = document.getElementById("loadMoreBtn");
+      loadMoreBtn.addEventListener("click", function () {
+        this.innerText = "No More Projects";
+        this.style.opacity = "0.5";
+        this.style.pointerEvents = "none";
+      });
+
+      document.querySelectorAll("img").forEach(function (image) {
+        image.addEventListener("load", function () {
+          this.style.opacity = "1";
+        });
+      });
+    </script>
+  </body>
+</html>
